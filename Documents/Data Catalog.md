@@ -268,7 +268,7 @@ One row per order line item.
 |`OrderLineNumber`|`INT`|No|Source line number|Degenerate attribute|
 |`Quantity`|`INT`|No|Units sold|Must be positive|
 |`UnitPrice`|`DECIMAL(18,2)`|No|Unit price|Must be `>= 0`|
-|`GrossAmount`|`DECIMAL(18,2)`|No|Amount before discount|`Quantity \* UnitPrice`|
+|`GrossAmount`|`DECIMAL(18,2)`|No|Amount before discount|`Quantity \\\* UnitPrice`|
 |`DiscountAmount`|`DECIMAL(18,2)`|No|Discount amount|Default `0` if NULL|
 |`NetAmount`|`DECIMAL(18,2)`|No|Final sales amount|`GrossAmount - DiscountAmount`|
 |`LoadDate`|`DATETIME2`|No|Load timestamp|Default `SYSDATETIME()`|
@@ -281,7 +281,7 @@ One row per order line item.
 |-|-|
 |Grain must remain stable|Every fact row represents one order line|
 |Unknown members are required|Missing dimension lookups must map to key `0`|
-|Gross amount must be calculated consistently|`GrossAmount = Quantity \* UnitPrice`|
+|Gross amount must be calculated consistently|`GrossAmount = Quantity \\\* UnitPrice`|
 |Net amount must be calculated consistently|`NetAmount = GrossAmount - DiscountAmount`|
 |Empty strings are not valid business values|Convert to `NULL` and handle with defaults|
 |PII must be protected|Mask or restrict phone and email data|
@@ -332,7 +332,7 @@ FROM stg.SalesOrder;
 All ETL procedures must use controlled transactions.
 
 ```sql
-SET XACT\_ABORT ON;
+SET XACT\\\_ABORT ON;
 
 BEGIN TRY
     BEGIN TRANSACTION;
@@ -356,7 +356,7 @@ END CATCH;
 
 ### Why this pattern is required
 
-* `SET XACT\_ABORT ON` ensures runtime errors cause automatic transaction failure.
+* `SET XACT\\\_ABORT ON` ensures runtime errors cause automatic transaction failure.
 * `BEGIN TRANSACTION` starts an atomic unit of work.
 * `COMMIT TRANSACTION` saves all changes permanently.
 * `ROLLBACK TRANSACTION` cancels all changes if any step fails.
@@ -398,18 +398,18 @@ END CATCH;
 SELECT
     SourceOrderID,
     SourceOrderLineID,
-    COUNT(\*) AS DuplicateCount
+    COUNT(\\\*) AS DuplicateCount
 FROM stg.SalesOrder
 GROUP BY
     SourceOrderID,
     SourceOrderLineID
-HAVING COUNT(\*) > 1;
+HAVING COUNT(\\\*) > 1;
 ```
 
 ### Invalid Quantities
 
 ```sql
-SELECT \*
+SELECT \\\*
 FROM stg.SalesOrder
 WHERE Quantity <= 0;
 ```
@@ -417,9 +417,9 @@ WHERE Quantity <= 0;
 ### Invalid Financial Values
 
 ```sql
-SELECT \*
+SELECT \\\*
 FROM fact.Sales
-WHERE GrossAmount <> Quantity \* UnitPrice
+WHERE GrossAmount <> Quantity \\\* UnitPrice
    OR NetAmount <> GrossAmount - DiscountAmount;
 ```
 
@@ -437,7 +437,7 @@ WHERE p.ProductKey IS NULL;
 
 ```sql
 SELECT
-    COUNT(\*) AS TotalRows,
+    COUNT(\\\*) AS TotalRows,
     SUM(CASE WHEN CustomerKey = 0 THEN 1 ELSE 0 END) AS UnknownCustomerRows,
     SUM(CASE WHEN ProductKey = 0 THEN 1 ELSE 0 END) AS UnknownProductRows
 FROM fact.Sales;
@@ -479,7 +479,7 @@ The following fields are considered PII and must be protected:
 
 |Domain|Steward|Responsibility|
 |-|-|-|
-|Sales|Reza Afkhamnia / BI Team|Maintain sales logic and KPI definitions|
+|Sales|Sana Alikhani / BI Team|Maintain sales logic and KPI definitions|
 |Customer|Data Team / CRM Team|Maintain customer quality and privacy rules|
 |Product|Data Team / Product Team|Maintain product hierarchy and master data|
 |Warehouse|Data Warehouse Owner|Maintain ETL, catalog, and technical governance|
@@ -492,10 +492,10 @@ Consumers should use curated reporting views instead of querying raw tables dire
 
 ### Recommended Reporting Layer
 
-* `rpt.vw\_SalesSummary`
-* `rpt.vw\_ProductPerformance`
-* `rpt.vw\_CustomerSales`
-* `rpt.vw\_DailySalesTrend`
+* `rpt.vw\\\_SalesSummary`
+* `rpt.vw\\\_ProductPerformance`
+* `rpt.vw\\\_CustomerSales`
+* `rpt.vw\\\_DailySalesTrend`
 
 ### Example Reporting Logic
 
@@ -588,7 +588,7 @@ Any structural or business change must be reflected in this catalog.
 
 |Version|Date|Author|Notes|
 |-|-|-|-|
-|`1.0.0`|`2026-08-10`|Reza Afkhamnia|Initial Data Catalog for Sales ETL / Data Warehouse project|
+|`1.0.0`|`2026-08-10`|Sana Alikhani|Initial Data Catalog for Sales ETL / Data Warehouse project|
 
 \---
 
@@ -600,7 +600,7 @@ Any modification to the ETL pipeline, warehouse schema, business logic, or repor
 
 \---
 
-**Maintained by:** Reza Afkhamnia  
+**Maintained by:** Sana Alikhani
 **Format:** Markdown (`.md`)  
 **Repository Use:** GitHub Documentation
 
