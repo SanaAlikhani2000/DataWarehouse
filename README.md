@@ -72,7 +72,7 @@ The architecture used in this project separates **raw data, cleaned data and bus
                                │
                                ▼
              ┌──────────────────────────────────┐
-             │          Data Warehouse           │
+             │          Data Warehouse          │
              │                                  │
              │       Star Schema Model          │
              │                                  │
@@ -80,20 +80,20 @@ The architecture used in this project separates **raw data, cleaned data and bus
              │   │ Customer │  │ Product  │     │
              │   │   Dim    │  │   Dim    │     │
              │   └────┬─────┘  └────┬─────┘     │
-             │        │             │            │
-             │        └──────┬──────┘            │
-             │               ▼                   │
-             │          ┌──────────┐             │
-             │          │  Sales   │             │
-             │          │   Fact   │             │
-             │          └──────────┘             │
+             │        │             │           │
+             │        └──────┬──────┘           │
+             │               ▼                  │
+             │          ┌──────────┐            │
+             │          │  Sales   │            │
+             │          │   Fact   │            │
+             │          └──────────┘            │
              │                                  │
              └──────────────────┬───────────────┘
                                 │
                                 ▼
                     ┌──────────────────────┐
-                    │    BI / Reporting   │
-                    │     Analytics       │
+                    │    BI / Reporting    │
+                    │     Analytics        │
                     └──────────────────────┘
 ```
 
