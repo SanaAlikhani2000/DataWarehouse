@@ -757,7 +757,7 @@ Potential extensions to the project include:
 
 ## 👤 Author
 
-**Sepide Moghadam**
+**Sana Alikhani**
 
 **Role:** Data Warehouse Developer
 
